@@ -32,8 +32,6 @@ public Q_SLOTS:
 	void undo();
 	void closeWindow();
 
-	void _imgBrightnessChange();
-	void _imgContrastChange();
 	void _imgResize();
 	void _imgRotate();
 	void _imgHorizontalFlip();
@@ -41,8 +39,6 @@ public Q_SLOTS:
 	void _imgInversion();
 	void _imgGrayscale();
 	void _imgCrop();
-
-	void _imgPaint();
 
 	void _drawHistogram();
 	void _imgHistEqualization();
