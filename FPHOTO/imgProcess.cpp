@@ -3,42 +3,6 @@
 #include "iostream"
 using namespace cv;
 
-void imgBrightnessChange(Mat in, Mat &out, int factor)
-{
-	out = in.clone();
-	if (in.channels() == 3)
-		for (int i = 0; i < in.rows; i++)
-			for (int j = 0; j < in.cols; j++)
-			{
-				out.at<Vec3b>(i, j)[0] = saturate_cast<uchar>(in.at<Vec3b>(i, j)[0] + factor);
-				out.at<Vec3b>(i, j)[1] = saturate_cast<uchar>(in.at<Vec3b>(i, j)[1] + factor);
-				out.at<Vec3b>(i, j)[2] = saturate_cast<uchar>(in.at<Vec3b>(i, j)[2] + factor);
-			}
-
-	else if (in.channels() == 1)
-		for (int i = 0; i < in.rows; i++)
-			for (int j = 0; j < in.cols; j++)
-				out.at<uchar>(i, j) = saturate_cast<uchar>(in.at<uchar>(i, j) + factor);
-}
-
-void imgContrastChange(Mat in, Mat &out, double factor)
-{
-	out = in.clone();
-	if (in.channels() == 3)
-	{
-		in.convertTo(out, CV_64F, 1.0 / 255, 0);
-		pow(out, factor, out);
-		out.convertTo(out, CV_8UC3, 255, 0);
-	}
-
-	else if (in.channels() == 1)
-	{
-		in.convertTo(out, CV_64F, 1.0 / 255, 0);
-		pow(out, factor, out);
-		out.convertTo(out, CV_8U, 255, 0);
-	}
-}
-
 void imgResize(Mat in, Mat &out, double factor)
 {
 	if (in.channels() == 3)

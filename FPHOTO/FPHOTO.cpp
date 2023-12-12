@@ -26,27 +26,7 @@ FPHOTO::FPHOTO(QWidget *parent)
 	MENU();
 	openImg = false;
 
-	ui.light->setMaximum(255), ui.light->setMinimum(-255);
-	ui.light->setValue(0), ui.light_num->setText(QString::number(0));
-	ui.contrast->setMaximum(100), ui.contrast->setMinimum(0);
-	ui.contrast->setValue(20), ui.contrast_num->setText(QString::number(0));
-	ui.hist->setScaledContents(true);
 	ui.stackSize->setText(QString::fromLocal8Bit("可撤销：") + QString::number(imageData.imgs.size()));
-
-	connect(ui.light, &QSlider::valueChanged, this, [this] {
-		if (!openImg)	return;
-		ui.light_num->setText(QString::number(ui.light->value()));
-		imgBrightnessChange(imageData.nowImg, imageData.tmp, ui.light->value());
-		ui.img->pixmapItem->setPixmap(QPixmap::fromImage(MatToQImage(imageData.tmp)));
-		ui.img->scene->addItem(ui.img->pixmapItem);
-		});
-	connect(ui.contrast, &QSlider::valueChanged, this, [this] {
-		if (!openImg)	return;
-		ui.contrast_num->setText(QString::number((ui.contrast->value() - 10) / 10.0));
-		imgContrastChange(imageData.nowImg, imageData.tmp, ui.contrast->value() / 10.0);
-		ui.img->pixmapItem->setPixmap(QPixmap::fromImage(MatToQImage(imageData.tmp)));
-		ui.img->scene->addItem(ui.img->pixmapItem);
-		});
 }
 
 FPHOTO::~FPHOTO()
@@ -84,12 +64,12 @@ void FPHOTO::MENU()
 	basicMenu->addAction(QString::fromLocal8Bit("图像直方图统计"), this, SLOT(_drawHistogram()));
 	basicMenu->addAction(QString::fromLocal8Bit("图像直方图均衡"), this, SLOT(_imgHistEqualization()));
 
-	QMenu *adjustMenu = ui.menuBar->addMenu(QString::fromLocal8Bit("调节"));
+	QMenu *adjustMenu = editMenu->addMenu(QString::fromLocal8Bit("调节"));
 	adjustMenu->setFont(font);
 	adjustMenu->addAction(QString::fromLocal8Bit("图像大小调节"), this, SLOT(_imgResize()));
 	//adjustMenu->addAction(QString::fromLocal8Bit("色彩调节"), this, SLOT());
 
-	QMenu *filterMenu = ui.menuBar->addMenu(QString::fromLocal8Bit("图像滤波"));
+	QMenu *filterMenu = editMenu->addMenu(QString::fromLocal8Bit("图像滤波"));
 	filterMenu->setFont(font);
 	QMenu *high = filterMenu->addMenu(QString::fromLocal8Bit("高通滤波"));
 	high->setFont(font);
@@ -103,13 +83,13 @@ void FPHOTO::MENU()
 	low->addAction(QString::fromLocal8Bit("最小值滤波"), this, SLOT(_imgMinFiltering()));
 	low->addAction(QString::fromLocal8Bit("最大值滤波"), this, SLOT(_imgMaxFiltering()));
 
-	QMenu *morphologyMenu = ui.menuBar->addMenu(QString::fromLocal8Bit("图像形态学处理"));
+	QMenu *morphologyMenu = editMenu->addMenu(QString::fromLocal8Bit("图像形态学处理"));
 	morphologyMenu->setFont(font);
 	morphologyMenu->addAction(QString::fromLocal8Bit("膨胀/腐蚀"), this, SLOT(_imgDilationOrErosion()));
 	morphologyMenu->addAction(QString::fromLocal8Bit("开运算/闭运算"), this, SLOT(_imgOpeningOrClosing()));
 	morphologyMenu->addAction(QString::fromLocal8Bit("顶帽变换/底帽变换"), this, SLOT(_imgTopOrBottomHatTrans()));
 
-	QMenu *detectAndSegMenu = ui.menuBar->addMenu(QString::fromLocal8Bit("图像分割与检测"));
+	QMenu *detectAndSegMenu = editMenu->addMenu(QString::fromLocal8Bit("图像分割与检测"));
 	detectAndSegMenu->setFont(font);
 
 	QMenu *segmentMenu = detectAndSegMenu->addMenu(QString::fromLocal8Bit("分割"));
@@ -131,11 +111,6 @@ void FPHOTO::MENU()
 			QMessageBox::about(this, QString::fromLocal8Bit("关于"),
 			QString::fromLocal8Bit("FPHOTO\t作者: 风信梓Fingsinz\n"));
 		});
-
-	connect(ui.light, &QSlider::sliderReleased, this, &FPHOTO::_imgBrightnessChange);
-	connect(ui.contrast, &QSlider::sliderReleased, this, &FPHOTO::_imgContrastChange);
-
-	connect(ui.paint, &QComboBox::currentTextChanged, this, &FPHOTO::_imgPaint);
 }
 
 void FPHOTO::postProcess()
@@ -160,11 +135,8 @@ void FPHOTO::openFile()
 	openImg = false;
 	QString filename = QFileDialog::getOpenFileName(this, QString::fromLocal8Bit("选择图像文件"), "", tr("*.jpg *.png *.tif *.tiff *.bmp"));
 	if (filename.isEmpty())
-	{
-		postProcess();
-		//undo();
 		return;
-	}
+
 	imageData.nowImg = cv::imread(filename.toLocal8Bit().toStdString());
 	if (!imageData.nowImg.empty())
 	{
@@ -223,36 +195,6 @@ void FPHOTO::undo()
 		ui.statusBar->showMessage(QString::fromLocal8Bit("已撤销"));
 		ui.imginfo->clear();
 	}
-}
-
-void FPHOTO::_imgBrightnessChange()
-{
-	if (!openImg)	return;
-	int value = ui.light->value();
-
-	imageData.keepTrace(imageData.nowImg);
-	// 功能函数
-	imgBrightnessChange(imageData.nowImg, imageData.nowImg, value);
-
-	// 后置处理
-	ui.light->setValue(0);
-	ui.info->append(QString::fromLocal8Bit("图片亮度调节"));
-	postProcess();
-}
-
-void FPHOTO::_imgContrastChange()
-{
-	if (!openImg)	return;
-	double value = ui.contrast->value() / 10.0;
-
-	imageData.keepTrace(imageData.nowImg);
-	// 功能函数
-	imgContrastChange(imageData.nowImg, imageData.nowImg, value);
-
-	// 后置处理
-	ui.contrast->setValue(10);
-	ui.info->append(QString::fromLocal8Bit("图片对比度调节"));
-	postProcess();
 }
 
 void FPHOTO::_imgResize()
@@ -389,112 +331,6 @@ void FPHOTO::_imgCrop()
 	postProcess();
 }
 
-void FPHOTO::_imgPaint()
-{
-	if (!openImg)
-	{
-		ui.paint->setCurrentIndex(0);
-		return;
-	}
-
-	int _type = ui.paint->currentIndex();
-
-	if (_type == 0)
-	{
-		ui.img->type = -1, ui.img->isPaint = false, ui.img->isCrop = false, ui.img->isText = false;
-		return;
-	}
-	else if (_type == 1)
-	{
-		ui.img->type = 1, ui.img->isPaint = true, ui.img->isCrop = false, ui.img->isText = false;
-		QColor _color = QColorDialog::getColor(QColor(255, 0, 0), this, QString::fromLocal8Bit("请选择颜色"));
-		if (!_color.isValid())
-			return;
-		int thickness = QInputDialog::getInt(this, QString::fromLocal8Bit("请选择线宽"), QString::fromLocal8Bit("线宽"), 1, 1, 100);
-		imageData.keepTrace(imageData.nowImg);
-
-		cv::Scalar color = cv::Scalar(_color.blue(), _color.green(), _color.red());
-		ui.img->_color = color, ui.img->_thickness = thickness;
-		ui.info->append(QString::fromLocal8Bit("添加直线"));
-	}
-	else if (_type == 2)
-	{
-		ui.img->type = 2, ui.img->isPaint = true, ui.img->isCrop = false, ui.img->isText = false;
-		QColor _color = QColorDialog::getColor(QColor(255, 0, 0), this, QString::fromLocal8Bit("请选择颜色"));
-		if (!_color.isValid())
-			return;
-		int thickness = QInputDialog::getInt(this, QString::fromLocal8Bit("请选择矩形框粗细"), QString::fromLocal8Bit("粗细"), 1, 1, 100);
-		imageData.keepTrace(imageData.nowImg);
-
-		cv::Scalar color = cv::Scalar(_color.blue(), _color.green(), _color.red());
-		ui.img->_color = color, ui.img->_thickness = thickness;
-		ui.info->append(QString::fromLocal8Bit("添加矩形"));
-	}
-	else if (_type == 3)
-	{
-		ui.img->type = 3, ui.img->isPaint = true, ui.img->isCrop = false, ui.img->isText = false;
-		QColor _color = QColorDialog::getColor(QColor(255, 0, 0), this, QString::fromLocal8Bit("请选择颜色"));
-		if (!_color.isValid())
-			return;
-		cv::Scalar color = cv::Scalar(_color.blue(), _color.green(), _color.red());
-		int thickness = QInputDialog::getInt(this, QString::fromLocal8Bit("请选择圆形框粗细"), QString::fromLocal8Bit("粗细"), 1, 1, 100);
-		imageData.keepTrace(imageData.nowImg);
-
-		ui.img->_color = color, ui.img->_thickness = thickness;
-		ui.info->append(QString::fromLocal8Bit("添加圆"));
-	}
-	else if (_type == 4)
-	{
-		ui.img->type = 0, ui.img->isPaint = true, ui.img->isCrop = false, ui.img->isText = false;
-		QColor _color = QColorDialog::getColor(QColor(255, 0, 0), this, QString::fromLocal8Bit("请选择颜色"));
-		if (!_color.isValid())
-			return;
-		cv::Scalar color = cv::Scalar(_color.blue(), _color.green(), _color.red());
-		int thickness = QInputDialog::getInt(this, QString::fromLocal8Bit("请输入画笔大小"), QString::fromLocal8Bit("大小"), 1, 1, 100);
-		imageData.keepTrace(imageData.nowImg);
-
-		ui.img->_color = color, ui.img->_thickness = thickness;
-		ui.info->append(QString::fromLocal8Bit("添加涂鸦"));
-	}
-	else if (_type == 5)
-	{
-		ui.img->type = -2, ui.img->isPaint = false, ui.img->isCrop = false, ui.img->isText = true;
-		QColor _color = QColorDialog::getColor(QColor(255, 0, 0), this, QString::fromLocal8Bit("请选择颜色"));
-		if (!_color.isValid())
-			return;
-		cv::Scalar color = cv::Scalar(_color.blue(), _color.green(), _color.red());
-
-		QFont font; font.setFamily(QString::fromLocal8Bit("微软雅黑 Light")), font.setPixelSize(16);
-		QDialog dlg(this);
-		QFormLayout form(&dlg);
-		dlg.setFont(font);
-
-		QSpinBox *sp1 = new QSpinBox(&dlg);
-		sp1->setMinimum(1), sp1->setMaximum(200), sp1->setValue(1);
-		QString tips1 = QString::fromLocal8Bit("请输入字体大小：");
-		form.addRow(tips1, sp1);
-
-		QLineEdit *le = new QLineEdit(&dlg);
-		QString tips3 = QString::fromLocal8Bit("请输入文字：");
-		form.addRow(tips3, le);
-
-		QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dlg);
-		form.addRow(&buttonBox);
-		QObject::connect(&buttonBox, &QDialogButtonBox::accepted, &dlg, &QDialog::accept);
-		QObject::connect(&buttonBox, &QDialogButtonBox::rejected, &dlg, &QDialog::reject);
-
-		if (dlg.exec() == QDialog::Rejected)	return;
-		imageData.keepTrace(imageData.nowImg);
-
-		int size = sp1->value();
-		QString t = le->text();
-		ui.img->_color = color, ui.img->_thickness = size, ui.img->s = t.toLocal8Bit().toStdString();
-		ui.info->append(QString::fromLocal8Bit("添加文字"));
-	}
-
-	postProcess();
-}
-
 void FPHOTO::_drawHistogram()
 {
 	if (!openImg)	return;
@@ -503,7 +339,17 @@ void FPHOTO::_drawHistogram()
 	drawHistogram(imageData.nowImg, imageData.Hist);
 
 	// 后置处理
-	ui.hist->setPixmap(QPixmap::fromImage(MatToQImage(imageData.Hist)).scaled(ui.hist->size()));
+	QFont font; font.setFamily(QString::fromLocal8Bit("微软雅黑 Light")), font.setPixelSize(16);
+	QDialog dlg(this);
+	QFormLayout form(&dlg);
+	dlg.setFont(font), dlg.setWindowTitle(QString::fromLocal8Bit("图像直方图"));
+
+	QGraphicsScene *gs = new QGraphicsScene(&dlg);
+	gs->addPixmap(QPixmap::fromImage(MatToQImage(imageData.Hist)));
+	QGraphicsView *gv = new QGraphicsView(&dlg);
+	gv->setScene(gs);
+	form.addRow(gv);
+	dlg.exec();
 }
 
 void FPHOTO::_imgHistEqualization()
@@ -515,7 +361,6 @@ void FPHOTO::_imgHistEqualization()
 	imgHistEqualization(imageData.nowImg, imageData.nowImg, imageData.Hist);
 
 	// 后置处理
-	ui.hist->setPixmap(QPixmap::fromImage(MatToQImage(imageData.Hist)).scaled(ui.hist->size()));
 	ui.info->append(QString::fromLocal8Bit("直方图均衡化"));
 	postProcess();
 }
@@ -823,7 +668,7 @@ void FPHOTO::_imgLaplaceFiltering()
 	cb->addItem(QString::fromLocal8Bit("请选择"));	cb->setCurrentIndex(2);
 	form.addRow(cb);
 
-	connect(cb, static_cast<void (QComboBox:: *)(int idx)>(&QComboBox::currentIndexChanged), &dlg, [cb, gs](int idx) {
+	connect(cb, static_cast<void (QComboBox:: *)(int idx)>(&QComboBox::currentIndexChanged), &dlg, [cb, gs] (int idx) {
 		gs->clear();
 		if (idx == 2)
 		{
@@ -862,12 +707,13 @@ void FPHOTO::_imgDilationOrErosion()
 	QFont font; font.setFamily(QString::fromLocal8Bit("微软雅黑 Light")), font.setPixelSize(16);
 	QDialog dlg(this);
 	QFormLayout form(&dlg);
-	dlg.setFont(font), dlg.setFixedSize(600, 600), dlg.setWindowTitle(QString::fromLocal8Bit("膨胀腐蚀预览"));
+	dlg.setFont(font), dlg.setWindowTitle(QString::fromLocal8Bit("膨胀腐蚀预览"));
 
 	QGraphicsScene *gs = new QGraphicsScene(&dlg);
 	gs->addPixmap(QPixmap::fromImage(MatToQImage(imageData.nowImg)));
 	QGraphicsView *gv = new QGraphicsView(&dlg);	gv->setScene(gs);
 	form.addRow(gv);
+	dlg.setFixedSize(max(400, imageData.nowImg.cols), max(400, imageData.nowImg.rows));
 
 	QComboBox *cb1 = new QComboBox(&dlg);
 	cb1->addItem(QString::fromLocal8Bit(" 膨胀"));
@@ -896,7 +742,7 @@ void FPHOTO::_imgDilationOrErosion()
 	pb->setText(QString::fromLocal8Bit("应用"));
 	form.addRow(pb);
 
-	connect(pb, &QPushButton::clicked, &dlg, [gs, cb1, sp1, cb2, sp2, &kernelSize, &kernelType, &op, &cnt]() {
+	connect(pb, &QPushButton::clicked, &dlg, [gs, cb1, sp1, cb2, sp2, &kernelSize, &kernelType, &op, &cnt] () {
 		gs->clear();
 		kernelSize = sp1->value(); kernelType = cb2->currentIndex();
 		op = cb1->currentIndex(), cnt = sp2->value();
@@ -934,12 +780,13 @@ void FPHOTO::_imgOpeningOrClosing()
 	QFont font; font.setFamily(QString::fromLocal8Bit("微软雅黑 Light")), font.setPixelSize(16);
 	QDialog dlg(this);
 	QFormLayout form(&dlg);
-	dlg.setFont(font), dlg.setFixedSize(600, 600), dlg.setWindowTitle(QString::fromLocal8Bit("开运算闭运算预览"));
+	dlg.setFont(font), dlg.setWindowTitle(QString::fromLocal8Bit("开运算闭运算预览"));
 
 	QGraphicsScene *gs = new QGraphicsScene(&dlg);
 	gs->addPixmap(QPixmap::fromImage(MatToQImage(imageData.nowImg)));
 	QGraphicsView *gv = new QGraphicsView(&dlg);	gv->setScene(gs);
 	form.addRow(gv);
+	dlg.setFixedSize(max(400, imageData.nowImg.cols), max(400, imageData.nowImg.rows));
 
 	QComboBox *cb1 = new QComboBox(&dlg);
 	cb1->addItem(QString::fromLocal8Bit(" 开运算"));
@@ -968,7 +815,7 @@ void FPHOTO::_imgOpeningOrClosing()
 	pb->setText(QString::fromLocal8Bit("应用"));
 	form.addRow(pb);
 
-	connect(pb, &QPushButton::clicked, &dlg, [gs, cb1, sp1, cb2, sp2, &kernelSize, &kernelType, &op, &cnt]() {
+	connect(pb, &QPushButton::clicked, &dlg, [gs, cb1, sp1, cb2, sp2, &kernelSize, &kernelType, &op, &cnt] () {
 		gs->clear();
 		kernelSize = sp1->value(); kernelType = cb2->currentIndex();
 		op = cb1->currentIndex() + 2, cnt = sp2->value();
@@ -1006,12 +853,13 @@ void FPHOTO::_imgTopOrBottomHatTrans()
 	QFont font; font.setFamily(QString::fromLocal8Bit("微软雅黑 Light")), font.setPixelSize(16);
 	QDialog dlg(this);
 	QFormLayout form(&dlg);
-	dlg.setFont(font), dlg.setFixedSize(600, 600), dlg.setWindowTitle(QString::fromLocal8Bit("顶帽变换底帽变换预览"));
+	dlg.setFont(font), dlg.setWindowTitle(QString::fromLocal8Bit("顶帽变换底帽变换预览"));
 
 	QGraphicsScene *gs = new QGraphicsScene(&dlg);
 	gs->addPixmap(QPixmap::fromImage(MatToQImage(imageData.nowImg)));
 	QGraphicsView *gv = new QGraphicsView(&dlg);	gv->setScene(gs);
 	form.addRow(gv);
+	dlg.setFixedSize(max(400, imageData.nowImg.cols), max(400, imageData.nowImg.rows));
 
 	QComboBox *cb1 = new QComboBox(&dlg);
 	cb1->addItem(QString::fromLocal8Bit(" 顶帽变换"));
@@ -1040,7 +888,7 @@ void FPHOTO::_imgTopOrBottomHatTrans()
 	pb->setText(QString::fromLocal8Bit("应用"));
 	form.addRow(pb);
 
-	connect(pb, &QPushButton::clicked, &dlg, [gs, cb1, sp1, cb2, sp2, &kernelSize, &kernelType, &op, &cnt]() {
+	connect(pb, &QPushButton::clicked, &dlg, [gs, cb1, sp1, cb2, sp2, &kernelSize, &kernelType, &op, &cnt] () {
 		gs->clear();
 		kernelSize = sp1->value(); kernelType = cb2->currentIndex();
 		op = cb1->currentIndex() + 5, cnt = sp2->value();
@@ -1239,7 +1087,7 @@ void FPHOTO::_imgPointDetect()
 	cb->addItem(QString::fromLocal8Bit("请选择"));	cb->setCurrentIndex(2);
 	form.addRow(cb);
 
-	connect(cb, static_cast<void (QComboBox:: *)(int idx)>(&QComboBox::currentIndexChanged), &dlg, [cb, gs](int idx) {
+	connect(cb, static_cast<void (QComboBox:: *)(int idx)>(&QComboBox::currentIndexChanged), &dlg, [cb, gs] (int idx) {
 		gs->clear();
 		if (idx == 2)
 		{
@@ -1319,7 +1167,7 @@ void FPHOTO::_imgEdgeDetect()
 	cb->addItem(QString::fromLocal8Bit("请选择"));	cb->setCurrentIndex(6);
 	form.addRow(cb);
 
-	connect(cb, static_cast<void (QComboBox:: *)(int idx)>(&QComboBox::currentIndexChanged), &dlg, [cb, gs](int idx) {
+	connect(cb, static_cast<void (QComboBox:: *)(int idx)>(&QComboBox::currentIndexChanged), &dlg, [cb, gs] (int idx) {
 		gs->clear();
 		if (idx == 6)
 		{
@@ -1328,14 +1176,14 @@ void FPHOTO::_imgEdgeDetect()
 		}
 		switch (idx)
 		{
-		case 0: sobel(imageData.nowImg, imageData.tmp);	break;
-		case 1: roberts(imageData.nowImg, imageData.tmp);	break;
-		case 2: prewitt(imageData.nowImg, imageData.tmp);	break;
-		case 3: kirsch(imageData.nowImg, imageData.tmp);	break;
-		case 4: LOG(imageData.nowImg, imageData.tmp);	break;
-		case 5: cv::Canny(imageData.nowImg, imageData.tmp, 100, 150);	break;
-		default:
-			break;
+			case 0: sobel(imageData.nowImg, imageData.tmp);	break;
+			case 1: roberts(imageData.nowImg, imageData.tmp);	break;
+			case 2: prewitt(imageData.nowImg, imageData.tmp);	break;
+			case 3: kirsch(imageData.nowImg, imageData.tmp);	break;
+			case 4: LOG(imageData.nowImg, imageData.tmp);	break;
+			case 5: cv::Canny(imageData.nowImg, imageData.tmp, 100, 150);	break;
+			default:
+				break;
 		}
 		gs->addPixmap(QPixmap::fromImage(MatToQImage(imageData.tmp)));
 		});

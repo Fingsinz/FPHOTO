@@ -83,39 +83,7 @@
          <property name="styleSheet">
           <string notr="true"/>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
-          <item>
-           <widget class="QLabel" name="hist">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>275</width>
-              <height>245</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>275</width>
-              <height>245</height>
-             </size>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::NoFrame</enum>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <layout class="QVBoxLayout" name="verticalLayout_3"/>
         </widget>
        </item>
        <item>
@@ -128,57 +96,16 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QLabel" name="label_3">
+           <widget class="QLabel" name="color">
             <property name="font">
              <font>
-              <family>黑体</family>
+              <family>微软雅黑 Light</family>
+              <pointsize>10</pointsize>
              </font>
             </property>
             <property name="text">
-             <string>绘画栏：</string>
+             <string/>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="paint">
-            <property name="font">
-             <font>
-              <family>黑体</family>
-             </font>
-            </property>
-            <item>
-             <property name="text">
-              <string>无</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>直线</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>矩形</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>圆</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>涂鸦</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>添加文字</string>
-             </property>
-            </item>
            </widget>
           </item>
          </layout>
@@ -196,16 +123,22 @@
           <string notr="true"/>
          </property>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="2">
-           <widget class="QLabel" name="stackSize">
+          <item row="2" column="0" colspan="3">
+           <widget class="QTextBrowser" name="info">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="font">
              <font>
-              <family>黑体</family>
+              <family>微软雅黑 Light</family>
               <pointsize>10</pointsize>
              </font>
             </property>
-            <property name="text">
-             <string/>
+            <property name="styleSheet">
+             <string notr="true"/>
             </property>
            </widget>
           </item>
@@ -224,65 +157,6 @@
              </size>
             </property>
            </spacer>
-          </item>
-          <item row="2" column="0" colspan="3">
-           <widget class="QTextBrowser" name="info">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <family>微软雅黑 Light</family>
-              <pointsize>10</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true"/>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="0">
-           <widget class="QLabel" name="light_num">
-            <property name="font">
-             <font>
-              <family>微软雅黑 Light</family>
-              <pointsize>10</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>0</string>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="1">
-           <widget class="QSlider" name="light">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="2">
-           <widget class="QLabel" name="label_2">
-            <property name="font">
-             <font>
-              <family>黑体</family>
-              <pointsize>11</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>对比度</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="1">
-           <widget class="QSlider" name="contrast">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
           </item>
           <item row="1" column="1" colspan="2">
            <widget class="QLabel" name="imginfo">
@@ -303,29 +177,16 @@
             </property>
            </widget>
           </item>
-          <item row="8" column="0">
-           <widget class="QLabel" name="contrast_num">
+          <item row="0" column="2">
+           <widget class="QLabel" name="stackSize">
             <property name="font">
              <font>
-              <family>微软雅黑 Light</family>
+              <family>黑体</family>
               <pointsize>10</pointsize>
              </font>
             </property>
             <property name="text">
-             <string>0</string>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="2">
-           <widget class="QLabel" name="label">
-            <property name="font">
-             <font>
-              <family>黑体</family>
-              <pointsize>11</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>亮度</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -343,7 +204,7 @@
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>29</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="font">
