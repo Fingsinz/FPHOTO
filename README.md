@@ -1,5 +1,8 @@
 # FPHOTO
 
+- [Gitee](https://gitee.com/fingsinz/fphoto)
+- [Github](https://github.com/Fingsinz/PHOTO)
+
 #### 介绍/Introduction
 
 ![](ui.jpg)
