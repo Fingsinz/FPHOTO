@@ -28,3 +28,8 @@ A basic image processing software developed by Visual Studio2022 that includes:
 6. To realize the image file point, line, edge detection and other functions;
 7. To achieve the image file of the given threshold segmentation, global automatic threshold segmentation, OTSU, regional growth and other functions;
 8. To add lines, rectangles, circles, characters, text and other functions on image files;
+
+## 程序环境/Environment
+
+- VS 2022
+- Qt 5.15.2 msvc2019 64
