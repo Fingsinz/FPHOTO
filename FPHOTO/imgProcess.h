@@ -2,183 +2,274 @@
 
 #include <opencv2/opencv.hpp>
 
-// Í¼ÏñÁÁ¶Èµ÷½Ú
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param factor£ºµ÷ÕûÒò×Ó
-void imgBrightnessChange(cv::Mat in, cv::Mat &out, int factor);
+namespace ImgTools {
+/*
+ * @brief å›¾åƒäº®åº¦è°ƒèŠ‚
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param iFactor è°ƒæ•´å› å­
+ * @return void
+ */
+void ChangeBrightness(const cv::Mat &iMat, cv::Mat &oMat, int iFactor);
 
-// Í¼Ïñ¶Ô±È¶Èµ÷½Ú
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param factor£ºµ÷ÕûÒò×Ó
-void imgContrastChange(cv::Mat in, cv::Mat &out, double factor);
+/*
+ * @brief å›¾åƒå¯¹æ¯”åº¦è°ƒèŠ‚
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param idFactor è°ƒæ•´å› å­
+ * @return void
+ */
+void ChangeContrast(const cv::Mat &iMat, cv::Mat &oMat, double idFactor);
 
-// Í¼ÏñËõ·Å
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param factor£ºµ÷ÕûÒò×Ó
-void imgResize(cv::Mat in, cv::Mat &out, double factor);
+/*
+ * @brief å›¾åƒç¼©æ”¾
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param idFactor è°ƒæ•´å› å­
+ * @return void
+ */
+void Resize(const cv::Mat &iMat, cv::Mat &oMat, double idFactor);
 
-// Í¼ÏñĞı×ª
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param angle£ºĞı×ª½Ç¶È×Ó
-void imgRotate(cv::Mat in, cv::Mat &out, double angle);
+/*
+ * @brief å›¾åƒæ—‹è½¬
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param idAngle æ—‹è½¬è§’åº¦
+ * @return void
+ */
+void Rotate(const cv::Mat &iMat, cv::Mat &oMat, double idAngle);
 
-// Í¼ÏñË®Æ½·­×ª
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-void imgHorizontalFlip(cv::Mat in, cv::Mat &out);
+/*
+ * @brief å›¾åƒæ°´å¹³ç¿»è½¬
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @return void
+ */
+void HorizontalFlip(const cv::Mat &iMat, cv::Mat &oMat);
 
-// Í¼Ïñ´¹Ö±·­×ª
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-void imgVerticalFlip(cv::Mat in, cv::Mat &out);
+/*
+ * @brief å›¾åƒå‚ç›´ç¿»è½¬
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @return void
+ */
+void VerticalFlip(const cv::Mat &iMat, cv::Mat &oMat);
 
-// Í¼Ïñ·´É«
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-void imgInversion(cv::Mat in, cv::Mat &out);
+/*
+ * @brief å›¾åƒåè‰²
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @return void
+ */
+void Inversion(const cv::Mat &iMat, cv::Mat &oMat);
 
-// Í¼Ïñ»Ò¶È»¯
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param type£ºÊÇ·ñÒÔµ¥Í¨µÀĞÎÊ½Êä³ö
-void imgGrayscale(cv::Mat in, cv::Mat &out, bool type);
+/*
+ * @brief å›¾åƒç°åº¦åŒ–
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param ibType æ˜¯å¦ä»¥å•é€šé“å½¢å¼è¾“å‡º
+ * @return void
+ */
+void Grayscale(const cv::Mat &iMat, cv::Mat &oMat, bool ibType);
 
-// Í¼ÏñÍ³¼ÆÖ±·½Í¼
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-void drawHistogram(cv::Mat in, cv::Mat &out);
+/*
+ * @brief å›¾åƒç»Ÿè®¡ç›´æ–¹å›¾
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @return void
+ */
+void DrawHistogram(const cv::Mat &iMat, cv::Mat &oMat);
 
-// Í¼ÏñÖ±·½Í¼¾ùºâ»¯
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param hist£º¾ùºâ»¯ºóµÄÖ±·½Í¼
-void imgHistEqualization(cv::Mat in, cv::Mat &out, cv::Mat &hist);
+/*
+ * @brief å›¾åƒç›´æ–¹å›¾å‡è¡¡åŒ–
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param oMatHist å‡è¡¡åŒ–åçš„ç›´æ–¹å›¾
+ * @return void
+ */
+void HistEqualization(const cv::Mat &iMat, cv::Mat &oMat, cv::Mat &oMatHist);
 
-// Í¼ÏñËãÊõÆ½¾ùÂË²¨
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param ksize£ººË´óĞ¡
-void imgArithmeticAverageFiltering(cv::Mat in, cv::Mat &out, int ksize);
+/*
+ * @brief å›¾åƒç®—æœ¯å¹³å‡æ»¤æ³¢
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param iKSize æ ¸å¤§å°
+ * @return void
+ */
+void ArithmeticAverageFilter(const cv::Mat &iMat, cv::Mat &oMat, int iKSize);
 
-// Í¼Ïñ¼¸ºÎÆ½¾ùÂË²¨
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param ksize£ººË´óĞ¡
-void imgGeometricAverageFiltering(cv::Mat in, cv::Mat &out, int ksize);
+/*
+ * @brief å›¾åƒå‡ ä½•å¹³å‡æ»¤æ³¢
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param iKSize æ ¸å¤§å°
+ * @return void
+ */
+void GeometricAverageFilter(const cv::Mat &iMat, cv::Mat &oMat, int iKSize);
 
-// Í¼ÏñĞ³²¨¾ùÖµÂË²¨
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param ksize£ººË´óĞ¡
-void imgHarmonicMeanFiltering(cv::Mat in, cv::Mat &out, int ksize);
+/*
+ * @brief å›¾åƒè°æ³¢å‡å€¼æ»¤æ³¢
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param iKSize æ ¸å¤§å°
+ * @return void
+ */
+void HarmonicMeanFilter(const cv::Mat &iMat, cv::Mat &oMat, int iKSize);
 
-// Í¼ÏñÖĞÖµÂË²¨
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param ksize£ººË´óĞ¡
-void imgMedianFiltering(cv::Mat in, cv::Mat &out, int ksize);
+/*
+ * @brief å›¾åƒä¸­å€¼æ»¤æ³¢
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param iKSize æ ¸å¤§å°
+ * @return void
+ */
+void MedianFilter(const cv::Mat &iMat, cv::Mat &oMat, int iKSize);
 
-// Í¼Ïñ×î´ó×îĞ¡ÖµÂË²¨
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param ksize£ººË´óĞ¡
-// @param type£ºÂË²¨ÀàĞÍ£¬×î´óÖµ»¹ÊÇ×îĞ¡Öµ
-void imgMaxMinFiltering(cv::Mat in, cv::Mat &out, int ksize, int type);
+/*
+ * @brief å›¾åƒæœ€å¤§æœ€å°å€¼æ»¤æ³¢
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param iKSize æ ¸å¤§å°
+ * @param iType æ»¤æ³¢ç±»å‹ï¼Œæœ€å¤§å€¼(1)è¿˜æ˜¯æœ€å°å€¼(0)
+ * @return void
+ */
+void MaxMinFilter(const cv::Mat &iMat, cv::Mat &oMat, int iKSize, int iType);
 
-// Í¼ÏñÀ­ÆÕÀ­Ë¹Èñ»¯
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param ksize£ººË´óĞ¡
-// @param type£ºÂË²¨ÀàĞÍ£¬ËÄÁÚÓò»¹ÊÇ°ËÁÚÓò
-void imgLaplaceFiltering(cv::Mat in, cv::Mat &out, int type);
+/*
+ * @brief å›¾åƒæ‹‰æ™®æ‹‰æ–¯é”åŒ–
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param iKSize æ ¸å¤§å°
+ * @param iType æ»¤æ³¢ç±»å‹ï¼Œå››é‚»åŸŸè¿˜æ˜¯å…«é‚»åŸŸ
+ * @return void
+ */
+void LaplaceFilter(const cv::Mat &iMat, cv::Mat &oMat, int iType);
 
-// Í¼ÏñÅòÕÍ¸¯Ê´
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param kernelSize£ººË´óĞ¡
-// @param kernelType£ººËÀàĞÍ
-// @param op£º²Ù×÷ÀàĞÍ
-// @param cnt£º²Ù×÷´ÎÊı
-void imgDilationOrErosion(cv::Mat in, cv::Mat &out, int kernelSize, int kernelType, int op, int cnt);
+/*
+ * @brief å›¾åƒè†¨èƒ€è…èš€
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param iKSize æ ¸å¤§å°
+ * @param iKType æ ¸ç±»å‹, 0: æ–¹å½¢; 1: åå­—; 2: æ¤­åœ†
+ * @param iOperation æ“ä½œç±»å‹, 0: è†¨èƒ€; 1: è…èš€
+ * @param iCnt æ“ä½œæ¬¡æ•°
+ * @return void
+ */
+void DilationOrErosion(const cv::Mat &iMat, cv::Mat &oMat, int iKSize, int iKType, int iOperation, int iCnt);
 
-// Í¼Ïñ¿ª±ÕÔËËã
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param kernelSize£ººË´óĞ¡
-// @param kernelType£ººËÀàĞÍ
-// @param op£º²Ù×÷ÀàĞÍ
-// @param cnt£º²Ù×÷´ÎÊı
-void imgOpeningOrClosing(cv::Mat in, cv::Mat &out, int kernelSize, int kernelType, int op, int cnt);
+/*
+ * @brief å›¾åƒå¼€é—­è¿ç®—
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param iKSize æ ¸å¤§å°
+ * @param iKType æ ¸ç±»å‹, 0: æ–¹å½¢; 1: åå­—; 2: æ¤­åœ†
+ * @param iOperation æ“ä½œç±»å‹, è§MorphTypes
+ * @param iCnt æ“ä½œæ¬¡æ•°
+ * @return void
+ */
+void OpeningOrClosing(const cv::Mat &iMat, cv::Mat &oMat, int iKSize, int iKType, int iOperation, int iCnt);
 
-// Í¼Ïñ¶¥Ã±±ä»»µ×Ã±±ä»»
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param kernelSize£ººË´óĞ¡
-// @param kernelType£ººËÀàĞÍ
-// @param op£º²Ù×÷ÀàĞÍ
-// @param cnt£º²Ù×÷´ÎÊı
-void imgTopOrBottomHatTrans(cv::Mat in, cv::Mat &out, int kernelSize, int kernelType, int op, int cnt);
+/*
+ * @brief å›¾åƒé¡¶å¸½å˜æ¢åº•å¸½å˜æ¢
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param iKSize æ ¸å¤§å°
+ * @param iKType æ ¸ç±»å‹, 0: æ–¹å½¢; 1: åå­—; 2: æ¤­åœ†
+ * @param iOperation æ“ä½œç±»å‹, è§MorphTypes
+ * @param iCnt æ“ä½œæ¬¡æ•°
+ * @return void
+ */
+void TopOrBottomHatTrans(const cv::Mat &iMat, cv::Mat &oMat, int iKSize, int iKType, int iOperation, int iCnt);
 
-// Í¼Ïñ¸ø¶¨ãĞÖµ·Ö¸î
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param T£º¸ø¶¨ãĞÖµ
-void imgThresholdSegment(cv::Mat in, cv::Mat &out, int T);
+/*
+ * @brief å›¾åƒç»™å®šé˜ˆå€¼åˆ†å‰²
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param iValue ç»™å®šé˜ˆå€¼
+ * @return void
+ */
+void ThresholdSegment(const cv::Mat &iMat, cv::Mat &oMat, int iValue);
 
-// Í¼Ïñ×Ô¶¯È«¾ÖãĞÖµ·Ö¸î
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param T£º×Ô¶¯È«¾ÖÇó³öµÄãĞÖµ·µ»Ø
-void imgIterativeThresholdSegment(cv::Mat in, cv::Mat &out, int &T);
+/*
+ * @brief å›¾åƒè‡ªåŠ¨å…¨å±€é˜ˆå€¼åˆ†å‰²
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param oValue è‡ªåŠ¨å…¨å±€æ±‚å‡ºçš„é˜ˆå€¼è¿”å›
+ * @return void
+ */
+void IterativeThresholdSegment(const cv::Mat &iMat, cv::Mat &oMat, int &oValue);
 
-// Í¼ÏñOTSUãĞÖµ·Ö¸î
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param T£ºOTSUÇó³öµÄãĞÖµ·µ»Ø
-void imgOTSUThresholdSegment(cv::Mat in, cv::Mat &out, int &T);
+/*
+ * @brief å›¾åƒOTSUé˜ˆå€¼åˆ†å‰²
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param oValue OTSUæ±‚å‡ºçš„é˜ˆå€¼è¿”å›
+ */
+void OTSUThresholdSegment(const cv::Mat &iMat, cv::Mat &oMat, int &oValue);
 
-// Í¼ÏñÇøÓòÉú³¤
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param T£ºÇøÓòÉú³¤ãĞÖµ£¬ÏñËØÔÚÄ³·¶Î§ÄÚÉú³¤
-void imgRegionGrowth(cv::Mat in, cv::Mat &out, int T);
+/*
+ * @brief å›¾åƒåŒºåŸŸç”Ÿé•¿
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param iValue åŒºåŸŸç”Ÿé•¿é˜ˆå€¼ï¼Œåƒç´ åœ¨æŸèŒƒå›´å†…ç”Ÿé•¿
+ * @return void
+ */
+void RegionGrowth(const cv::Mat &iMat, cv::Mat &oMat, int iValue);
 
-// Í¼ÏñSobelËã×Ó¾í»ı
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-void sobel(cv::Mat in, cv::Mat &out);
+/*
+ * @brief å›¾åƒSobelç®—å­å·ç§¯
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @return void
+ */
+void Sobel(const cv::Mat &iMat, cv::Mat &oMat);
 
-// Í¼ÏñRobertsËã×Ó¾í»ı
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-void roberts(cv::Mat in, cv::Mat &out);
+/*
+ * @brief å›¾åƒRobertsç®—å­å·ç§¯
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @return void
+ */
+void Roberts(const cv::Mat &iMat, cv::Mat &oMat);
 
-// Í¼ÏñPrewittËã×Ó¾í»ı
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-void prewitt(cv::Mat in, cv::Mat &out);
+/*
+ * @brief å›¾åƒPrewittç®—å­å·ç§¯
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @return void
+ */
+void Prewitt(const cv::Mat &iMat, cv::Mat &oMat);
 
-// Í¼ÏñKirschËã×Ó¾í»ı
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-void kirsch(cv::Mat in, cv::Mat &out);
+/*
+ * @brief å›¾åƒKirschç®—å­å·ç§¯
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @return void
+ */
+void Kirsch(const cv::Mat &iMat, cv::Mat &oMat);
 
-// Í¼Ïñ¸ßË¹À­ÆÕÀ­Ë¹Ëã×Ó¾í»ı
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-void LOG(cv::Mat in, cv::Mat &out);
+/*
+ * @brief å›¾åƒé«˜æ–¯æ‹‰æ™®æ‹‰æ–¯ç®—å­å·ç§¯
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @return void
+ */
+void LOG(const cv::Mat &iMat, cv::Mat &oMat);
 
-// Í¼Ïñµã¼ì²â£¨À­ÆÕÀ­Ë¹¾í»ı£©
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-// @param type£ºËÄÁÚÓò»ò°ËÁÚÓò
-void imgPointDetect(cv::Mat in, cv::Mat &out, int type);
+/*
+ * @brief å›¾åƒç‚¹æ£€æµ‹ï¼ˆæ‹‰æ™®æ‹‰æ–¯å·ç§¯ï¼‰
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @param iType å››é‚»åŸŸ(0)æˆ–å…«é‚»åŸŸ(1)
+ * @return void
+ */
+void PointDetect(const cv::Mat &iMat, cv::Mat &oMat, int iType);
 
-// Í¼ÏñÏß¼ì²â
-// @param in£ºÊäÈëÍ¼Ïñ
-// @param out£ºÊä³öÍ¼Ïñ
-void imgLineDetect(cv::Mat in, cv::Mat &out);
+/*
+ * @brief å›¾åƒçº¿æ£€æµ‹
+ * @param iMat è¾“å…¥å›¾åƒ
+ * @param oMat è¾“å‡ºå›¾åƒ
+ * @return void
+ */
+void LineDetect(const cv::Mat &iMat, cv::Mat &oMat);
+} // namespace ImgTools

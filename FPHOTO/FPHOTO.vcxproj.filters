@@ -37,30 +37,30 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="imgProcess.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Global.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PhotoShow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ImgInstance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="util.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="imgProcess.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Global.h">
+    <ClInclude Include="PhotoShow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PhotoShow.h">
+    <ClInclude Include="ImgInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -73,5 +73,8 @@
     <QtRcc Include="FPHOTO.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".clang-format" />
   </ItemGroup>
 </Project>

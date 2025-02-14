@@ -123,26 +123,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Global.cpp" />
-    <ClCompile Include="imgProcess.cpp" />
+    <ClCompile Include="ImgInstance.cpp" />
+    <ClCompile Include="ImgProcess.cpp" />
     <ClCompile Include="PhotoShow.cpp" />
-    <ClCompile Include="util.cpp" />
+    <ClCompile Include="Utils.cpp" />
     <QtUic Include="FPHOTO.ui" />
     <QtMoc Include="FPHOTO.h" />
     <ClCompile Include="FPHOTO.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Global.h" />
-    <ClInclude Include="imgProcess.h" />
+    <ClInclude Include="ImgInstance.h" />
+    <ClInclude Include="ImgProcess.h" />
     <ClInclude Include="PhotoShow.h" />
-    <ClInclude Include="util.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="FPHOTO.jpeg" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="FPHOTO.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".clang-format" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
