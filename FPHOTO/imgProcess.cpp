@@ -10,15 +10,13 @@ namespace ImgTools {
 void ChangeBrightness(const cv::Mat &iMat, cv::Mat &oMat, int iFactor) {
     oMat = iMat.clone();
     if (iMat.channels() == 3) {
-        oMat = iMat + iFactor;
-
-        // for (int i = 0; i < iMat.rows; i++) {
-        //     for (int j = 0; j < iMat.cols; j++) {
-        //         oMat.at<Vec3b>(i, j)[0] = saturate_cast<uchar>(iMat.at<Vec3b>(i, j)[0] + iFactor);
-        //         oMat.at<Vec3b>(i, j)[1] = saturate_cast<uchar>(iMat.at<Vec3b>(i, j)[1] + iFactor);
-        //         oMat.at<Vec3b>(i, j)[2] = saturate_cast<uchar>(iMat.at<Vec3b>(i, j)[2] + iFactor);
-        //     }
-        // }
+        for (int i = 0; i < iMat.rows; i++) {
+            for (int j = 0; j < iMat.cols; j++) {
+                oMat.at<Vec3b>(i, j)[0] = saturate_cast<uchar>(iMat.at<Vec3b>(i, j)[0] + iFactor);
+                oMat.at<Vec3b>(i, j)[1] = saturate_cast<uchar>(iMat.at<Vec3b>(i, j)[1] + iFactor);
+                oMat.at<Vec3b>(i, j)[2] = saturate_cast<uchar>(iMat.at<Vec3b>(i, j)[2] + iFactor);
+            }
+        }
     }
 
     else if (iMat.channels() == 1) {

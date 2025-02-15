@@ -1,7 +1,7 @@
 #include "Utils.h"
 
 QImage MatToQImage(const cv::Mat &mat) {
-    if (mat.channels() == CV_8UC1) {
+    if (mat.channels() == 1) {
         QImage image(mat.cols, mat.rows, QImage::Format_Indexed8);
         // 设置颜色(用于将颜色索引转换为qRgb值)
         image.setColorCount(256);
@@ -20,11 +20,11 @@ QImage MatToQImage(const cv::Mat &mat) {
         return image;
     }
 
-    else if (mat.channels() == CV_8UC3) {
+    else if (mat.channels() == 3) {
         const uchar *pSrc = (const uchar *)mat.data;
         QImage image(pSrc, mat.cols, mat.rows, mat.step, QImage::Format_RGB888);
         return image.rgbSwapped();
-    } else if (mat.channels() == CV_8UC4) {
+    } else if (mat.channels() == 4) {
         const uchar *pSrc = (const uchar *)mat.data;
         QImage image(pSrc, mat.cols, mat.rows, mat.step, QImage::Format_ARGB32);
         return image.copy();

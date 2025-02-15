@@ -162,18 +162,21 @@ void FPHOTO::OpenFile() {
     QString filename = QFileDialog::getOpenFileName(
         this, QString::fromLocal8Bit("选择图像文件"), "", tr("*.jpg *.png *.tif *.tiff *.bmp"));
     if (filename.isEmpty()) {
-        PostProcess();
+        // PostProcess();
         // undo();
         return;
     }
+
     ImgInstance::GetNowImg() = cv::imread(filename.toLocal8Bit().toStdString());
+
     if (!ImgInstance::GetNowImg().empty()) {
         m_bOpenImg = true;
         ImgInstance::KeepTrace(ImgInstance::GetNowImg());
         ui.info->append(QString::fromLocal8Bit("打开文件"));
         PostProcess();
-    } else
+    } else {
         QMessageBox::warning(this, QString::fromLocal8Bit("警告"), QString::fromLocal8Bit("打开图片失败"));
+    }
 }
 
 void FPHOTO::NewFile() {
@@ -336,7 +339,10 @@ void FPHOTO::HorizontalFlip() {
 
     ImgInstance::KeepTrace(ImgInstance::GetNowImg());
     // 功能函数
-    ImgTools::HorizontalFlip(ImgInstance::GetNowImg(), ImgInstance::GetNowImg());
+    ImgTools::HorizontalFlip(ImgInstance::GetNowImg(), ImgInstance::GetTmp());
+
+    ImgInstance::GetNowImg() = ImgInstance::GetTmp().clone();
+    ImgInstance::GetTmp().release();
 
     // 后置处理
     ui.info->append(QString::fromLocal8Bit("图片水平翻转"));
@@ -349,7 +355,10 @@ void FPHOTO::VerticalFlip() {
 
     ImgInstance::KeepTrace(ImgInstance::GetNowImg());
     // 功能函数
-    ImgTools::VerticalFlip(ImgInstance::GetNowImg(), ImgInstance::GetNowImg());
+    ImgTools::VerticalFlip(ImgInstance::GetNowImg(), ImgInstance::GetTmp());
+
+    ImgInstance::GetNowImg() = ImgInstance::GetTmp().clone();
+    ImgInstance::GetTmp().release();
 
     // 后置处理
     ui.info->append(QString::fromLocal8Bit("图片垂直翻转"));
